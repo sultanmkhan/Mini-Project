@@ -2,3 +2,11 @@ CREATE KEYSPACE user WITH REPLICATION = {'class' : 'Initial', 'replication_facto
 
 CREATE TABLE user.namesANDpasswords 
 (USERNAME text, PASSWORD text PRIMARY KEY(NAME, PASSWORD));
+
+FROM python:3.7 − alpine
+WORKDIR /Goodbooks
+COPY . /Goodbooks
+RUN pip install −U −r requirements.txt
+EXPOSE 8080
+CMD [" python" , "Goodbooks.py"]
+
