@@ -1,0 +1,4 @@
+CREATE KEYSPACE user WITH REPLICATION = {'class' : 'Initial', 'replication_factor' : 1};
+
+CREATE TABLE user.namesANDpasswords 
+(USERNAME text, PASSWORD text PRIMARY KEY(NAME, PASSWORD));
