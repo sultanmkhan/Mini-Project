@@ -1,6 +1,8 @@
 ## Mini-Project
 
 ### Title: Goodbooks
+This project contains index, login, search and logout method. As name suggest index is a home page, login requires username and password which would query from Cassandra table running on different container, search works with a parameter "such as book name" and fetch first 20 titles and finally logout which shutdown the cluster.
+
 #### API's: Goodreads [www.goodreads.com/api]
 The Goodreads API allows developers access to Goodreads data in order to help websites or applications that deal with books. Most API methods will require you to register for a developer key. There is my personal key in the Goodbooks.py file. (only for assessment)
 #### Technologies 
