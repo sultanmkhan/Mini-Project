@@ -1,8 +1,8 @@
 ## Mini-Project
 
 ### Title: Goodbooks
-#### API's: Goodreads
-www.goodreads.com/api
+#### API's: Goodreads [www.goodreads.com/api]
+The Goodreads API allows developers access to Goodreads data in order to help websites or applications that deal with books. Most API methods will require you to register for a developer key. There is my personal key in the Goodbooks.py file. (only for assessment)
 #### Technologies 
 Python, 
 Cassandra, 
