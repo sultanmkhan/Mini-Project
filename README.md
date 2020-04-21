@@ -1,11 +1,11 @@
-												# Mini-Project
+## Mini-Project
 												
-### Title: Goodbooks
-### API's: Goodreads
+#### Title: Goodbooks
+#### API's: Goodreads
 www.goodreads.com/api
-### Technologies 
-Python 
-Cassandra 
-Docker
+#### Technologies 
+Python, 
+Cassandra, 
+Docker and
 Amazon web services
-### Launch
+#### Launch
