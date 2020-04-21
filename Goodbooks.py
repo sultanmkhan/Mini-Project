@@ -1,60 +1,47 @@
-from flask import Flask, render_template, jsonify, Response, session
-import xmltodict, json
-from pprint import pprint
-import xml.etree.ElementTree as ET
-#from cassandra.cluster import Cluster
-import requests
+from flask import Flask, jsonify, Response, session
 import hashlib
+import requests
+import xml.etree.ElementTree as ET
+from cassandra.cluster import Cluster
 
-#cluster = Cluster(contact_points=['172.17.0.2'],port=9042)
-#session = cluster.connect()
+cluster = Cluster(contact_points=['172.17.0.2'], port=9042)
+session = cluster.connect()
 
-app= Flask(__name__)
-app.secret_key='super'
+app = Flask(__name__)
+
 @app.route('/')
 def index():
-   return "<h1> Wellcom to Goodreads</h1><b><h4> please login before perform any action"
-   #return render_template('index.html')
+    return "<h1> Wellcom to Goodbooks</h1><b><h4> please login"
 
 @app.route('/login/<username>/<password>', methods=['GET', 'POST'])
 def login(username, password):
     salt = '5gz'
-    password = password+salt
+    password = password + salt
     password = hashlib.md5(password.encode())
     password = password.hexdigest()
-    if(password=='24e2a20dcb8d414d13a21209ad26624e'):
-        session['user_name']='admin'
-        pprint(session)
-        return "<h2>Login was successful</h2>"
+    rows = session.execute(
+        """SELECT * FROM user.usernamesandpassword  WHERE username='{}' AND password='{}'""".format(username, password))
+    result = rows.all()
+    if (len(result) > 0):
+        return {username: 'welcome'}
     else:
-        return "<h2>This is invalid credentials try again </h2>"
-    #rows = session.execute("""SELECT * FROM user.usernamesANDpassword WHERE username='{}' AND password='{}'""".format(username, password))
-    #if i in rows:
-       # return {username:'welcome'}
-   # else:
-     #   return {password: 'Wrong'}
+        return {username: '! You have  entered wrong credentials try again'}
 
+"""The search methods returns first 20 titles from Goodreads by title"""
 @app.route('/search/<keyword>', methods=['GET'])
 def search(keyword):
-    url="https://www.goodreads.com/search/index.xml?key=iLbLcwF5ca4oLVjiCdn4A&q={keyword}"    #key included
-    response= requests.get(url)
-    response= response.content
-    #pprint(response)
-    #tree = ET.parse(response)
-    #root = ET.fromstring(response)
-
-
-    #content = xmltodict.parse(response)  # converting Xml date to a dictionary
-    #json_content= json.dumps(content)   # converting dictionary  to Json
-    #print(content['GoodreadsResponse']['search']['results']['work'][])
-
-    return jsonify({keyword :"cannot find anything"})
+    url = "https://www.goodreads.com/search/index.xml?key=iLbLcwF5ca4oLVjiCdn4A&q={}".format(keyword)  # key included
+    r = requests.get(url)
+    root = ET.fromstring(r.content)
+    titles = []
+    for name in root.iter('title'):
+        titles.append(name.text)  # appending retrieved results
+    return jsonify({'Titles ': titles})
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    session.pop('user_name', None)
+    cluster.shutdown()
     return "<h2>Logout was successful </h2>"
 
-
-if __name__== '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80, debug=True)

@@ -1,0 +1,6 @@
+CREATE KEYSPACE user WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1};
+
+CREATE TABLE user.namesANDpasswords 
+(username text, password text, PRIMARY KEY(username, password));
+
+INSERT INTO user.namesandpassword(username, password) VALUES('sultan', '24e2a20dcb8d414d13a21209ad26624e');
